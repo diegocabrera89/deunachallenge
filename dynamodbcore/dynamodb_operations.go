@@ -19,7 +19,7 @@ type CoreRepository interface {
 	GetItemCore(ctx context.Context, request events.APIGatewayProxyRequest, fieldNameFilterByID string, fieldValueFilterByID string) (*dynamodb.GetItemOutput, error)
 	DeleteItemCore(ctx context.Context, request events.APIGatewayProxyRequest, fieldNameFilterByID string, fieldValueFilterByID string) error
 	UpdateItemCore(ctx context.Context, request events.APIGatewayProxyRequest, itemObject interface{}, fieldNameFilterByID string, fieldValueFilterByID string, skipFields []string) error
-	GetItemByFieldCore(ctx context.Context, request events.APIGatewayProxyRequest, fieldNameFilterByID string, fieldValueFilterByID string) (*dynamodb.QueryOutput, error)
+	GetItemByFieldCore(ctx context.Context, request events.APIGatewayProxyRequest, fieldNameFilterByID string, fieldValueFilterByID string, globalSecondaryIndex string) (*dynamodb.QueryOutput, error)
 }
 
 // DynamoDBRepository implements DynamoDBRepository for DynamoDB.
