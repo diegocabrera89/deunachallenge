@@ -19,6 +19,7 @@ type CoreRepository interface {
 	GetItemCore(ctx context.Context, request events.APIGatewayProxyRequest, fieldNameFilterByID string, fieldValueFilterByID string) (*dynamodb.GetItemOutput, error)
 	DeleteItemCore(ctx context.Context, request events.APIGatewayProxyRequest, fieldNameFilterByID string, fieldValueFilterByID string) error
 	UpdateItemCore(ctx context.Context, request events.APIGatewayProxyRequest, itemObject interface{}, fieldNameFilterByID string, fieldValueFilterByID string, skipFields []string) error
+	GetItemByFieldCore(ctx context.Context, request events.APIGatewayProxyRequest, fieldNameFilterByID string, fieldValueFilterByID string) (*dynamodb.QueryOutput, error)
 }
 
 // DynamoDBRepository implements DynamoDBRepository for DynamoDB.
@@ -124,4 +125,39 @@ func (d DynamoDBRepository) UpdateItemCore(ctx context.Context, request events.A
 	_, errorUpdateItem := d.client.UpdateItem(context.TODO(), updateItemInput)
 
 	return errorUpdateItem
+}
+
+// GetItemByFieldCore get item from DynamoDB.
+func (d DynamoDBRepository) GetItemByFieldCore(ctx context.Context, request events.APIGatewayProxyRequest, fieldNameFilterByID string, fieldValueFilterByID string, globalSecondaryIndex string) (*dynamodb.QueryOutput, error) {
+	logs.LogTrackingInfo("GetItemByFieldCore", ctx, request)
+
+	filter := expression.Name(fieldNameFilterByID).Equal(
+		expression.Value(fieldValueFilterByID))
+
+	logs.LogTrackingInfoData("GetItemByFieldCore filter", filter, ctx, request) //TODO
+
+	expr, errorExpression := expression.NewBuilder().WithFilter(filter).Build()
+
+	logs.LogTrackingInfoData("GetItemByFieldCore expr", expr, ctx, request) //TODO
+
+	if errorExpression != nil {
+		logs.LogTrackingError("GetItemByFieldCore", "expression.NewBuilder", ctx, request, errorExpression)
+	}
+	logs.LogTrackingInfoData("GetItemByFieldCore", expr, ctx, request)
+
+	input := &dynamodb.QueryInput{
+		IndexName:                 aws.String(globalSecondaryIndex),
+		TableName:                 aws.String(d.table),
+		ExpressionAttributeNames:  expr.Names(),
+		ExpressionAttributeValues: expr.Values(),
+		KeyConditionExpression:    expr.Filter(),
+	}
+	response, err := d.client.GetItemByField(context.TODO(), input)
+	logs.LogTrackingInfoData("GetItemByFieldCore response", response, ctx, request) //TODO
+
+	if err != nil {
+		logs.LogTrackingError("GetItemByFieldCore", "GetItemByField", ctx, request, err)
+		return &dynamodb.QueryOutput{}, nil
+	}
+	return response, nil
 }

@@ -11,6 +11,7 @@ type DynamoDBClientInterface interface {
 	GetItem(ctx context.Context, params *dynamodb.GetItemInput, optFns ...func(*dynamodb.Options)) (*dynamodb.GetItemOutput, error)
 	DeleteItem(ctx context.Context, params *dynamodb.DeleteItemInput, optFns ...func(*dynamodb.Options)) (*dynamodb.DeleteItemOutput, error)
 	UpdateItem(ctx context.Context, params *dynamodb.UpdateItemInput, optFns ...func(*dynamodb.Options)) (*dynamodb.UpdateItemOutput, error)
+	GetItemByField(ctx context.Context, params *dynamodb.QueryInput, optFns ...func(*dynamodb.Options)) (*dynamodb.QueryOutput, error)
 }
 
 // DynamoDBClient implements the DynamoDBClientInterface interface using the actual DynamoDB client.
@@ -36,4 +37,9 @@ func (c *DynamoDBClient) DeleteItem(ctx context.Context, params *dynamodb.Delete
 // UpdateItem implements DynamoDB's DeleteItem operation.
 func (c *DynamoDBClient) UpdateItem(ctx context.Context, params *dynamodb.UpdateItemInput, optFns ...func(*dynamodb.Options)) (*dynamodb.UpdateItemOutput, error) {
 	return c.client.UpdateItem(ctx, params, optFns...)
+}
+
+// GetItemByField implements DynamoDB's GetItem operation.
+func (c *DynamoDBClient) GetItemByField(ctx context.Context, params *dynamodb.QueryInput, optFns ...func(*dynamodb.Options)) (*dynamodb.QueryOutput, error) {
+	return c.client.Query(ctx, params, optFns...)
 }
