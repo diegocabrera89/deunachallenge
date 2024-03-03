@@ -153,13 +153,22 @@ func (d DynamoDBRepository) GetItemByFieldCore(ctx context.Context, request even
 	}
 	logs.LogTrackingInfoData("GetItemByFieldCore", expr, ctx, request)
 
+	//input := &dynamodb.QueryInput{
+	//	IndexName:                 aws.String(globalSecondaryIndex),
+	//	TableName:                 aws.String(d.table),
+	//	ExpressionAttributeNames:  expr.Names(),
+	//	ExpressionAttributeValues: expr.Values(),
+	//	KeyConditionExpression:    expr.Filter(),
+	//}
 	input := &dynamodb.QueryInput{
-		IndexName:                 aws.String(globalSecondaryIndex),
-		TableName:                 aws.String(d.table),
-		ExpressionAttributeNames:  expr.Names(),
-		ExpressionAttributeValues: expr.Values(),
-		KeyConditionExpression:    expr.Filter(),
+		IndexName:              aws.String(globalSecondaryIndex),
+		TableName:              aws.String(d.table),
+		KeyConditionExpression: aws.String("publicID = :publicID"),
+		ExpressionAttributeValues: map[string]types.AttributeValue{
+			":publicID": &types.AttributeValueMemberS{Value: "6900001"},
+		},
 	}
+	logs.LogTrackingInfoData("GetItemByFieldCore input", input, ctx, request)
 	response, err := d.client.GetItemByField(context.TODO(), input)
 	logs.LogTrackingInfoData("GetItemByFieldCore response", response, ctx, request) //TODO
 
