@@ -131,14 +131,27 @@ func (d DynamoDBRepository) UpdateItemCore(ctx context.Context, request events.A
 func (d DynamoDBRepository) GetItemByFieldCore(ctx context.Context, request events.APIGatewayProxyRequest, fieldNameFilterByID string, fieldValueFilterByID string, globalSecondaryIndex string, fieldNameFilterStatus string, fieldValueFilterStatus string) (*dynamodb.QueryOutput, error) {
 	logs.LogTrackingInfo("GetItemByFieldCore", ctx, request)
 
+	// Definir la expresión de la clave
+	keyCondition := "#" + fieldNameFilterByID + " = :" + fieldValueFilterByID + " AND #" + fieldNameFilterStatus + " = :" + fieldValueFilterStatus
+
+	// Definir los nombres de atributos de expresión
+	exprAttrNames := map[string]string{
+		"#" + fieldNameFilterByID:   fieldNameFilterByID,
+		"#" + fieldNameFilterStatus: fieldNameFilterStatus,
+	}
+
+	// Definir los valores de atributos de expresión
+	exprAttrValues := map[string]types.AttributeValue{
+		":" + fieldValueFilterByID:   &types.AttributeValueMemberS{Value: fieldValueFilterByID},
+		":" + fieldValueFilterStatus: &types.AttributeValueMemberS{Value: fieldValueFilterStatus},
+	}
+
 	input := &dynamodb.QueryInput{
-		IndexName:              aws.String(globalSecondaryIndex),
-		TableName:              aws.String(d.table),
-		KeyConditionExpression: aws.String(fieldNameFilterByID + " = :" + fieldNameFilterByID + " and " + fieldNameFilterStatus + " = :" + fieldNameFilterStatus),
-		ExpressionAttributeValues: map[string]types.AttributeValue{
-			":" + fieldNameFilterByID:   &types.AttributeValueMemberS{Value: fieldValueFilterByID},
-			":" + fieldNameFilterStatus: &types.AttributeValueMemberS{Value: fieldValueFilterStatus},
-		},
+		IndexName:                 aws.String(globalSecondaryIndex),
+		TableName:                 aws.String(d.table),
+		KeyConditionExpression:    aws.String(keyCondition),
+		ExpressionAttributeNames:  exprAttrNames,
+		ExpressionAttributeValues: exprAttrValues,
 	}
 	logs.LogTrackingInfoData("GetItemByFieldCore input", input, ctx, request)
 	response, err := d.client.GetItemByField(context.TODO(), input)
