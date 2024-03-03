@@ -131,7 +131,9 @@ func (d DynamoDBRepository) UpdateItemCore(ctx context.Context, request events.A
 func (d DynamoDBRepository) GetItemByFieldCore(ctx context.Context, request events.APIGatewayProxyRequest, fieldNameFilterByID string, fieldValueFilterByID string, globalSecondaryIndex string) (*dynamodb.QueryOutput, error) {
 	logs.LogTrackingInfo("GetItemByFieldCore", ctx, request)
 
-	logs.LogTrackingInfoData("GetItemByFieldCore expression.Name(fieldNameFilterByID)", expression.Name(fieldNameFilterByID), ctx, request)     //TODO
+	logs.LogTrackingInfoData("GetItemByFieldCore fieldNameFilterByID", fieldNameFilterByID, ctx, request)                                       //TODO
+	logs.LogTrackingInfoData("GetItemByFieldCore fieldValueFilterByID", fieldValueFilterByID, ctx, request)                                     //TODO
+	logs.LogTrackingInfoData("GetItemByFieldCore expression.Value(fieldValueFilterByID)", expression.Value(fieldValueFilterByID), ctx, request) //TODO
 	logs.LogTrackingInfoData("GetItemByFieldCore expression.Value(fieldValueFilterByID)", expression.Value(fieldValueFilterByID), ctx, request) //TODO
 	filter := expression.Name(fieldNameFilterByID).Equal(
 		expression.Value(fieldValueFilterByID))
