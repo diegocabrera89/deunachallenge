@@ -133,10 +133,14 @@ func (d DynamoDBRepository) GetItemByFieldCore(ctx context.Context, request even
 
 	logs.LogTrackingInfoData("GetItemByFieldCore fieldNameFilterByID", fieldNameFilterByID, ctx, request)                                       //TODO
 	logs.LogTrackingInfoData("GetItemByFieldCore fieldValueFilterByID", fieldValueFilterByID, ctx, request)                                     //TODO
+	logs.LogTrackingInfoData("GetItemByFieldCore expression.Name(fieldNameFilterByID)", expression.Name(fieldNameFilterByID), ctx, request)     //TODO
 	logs.LogTrackingInfoData("GetItemByFieldCore expression.Value(fieldValueFilterByID)", expression.Value(fieldValueFilterByID), ctx, request) //TODO
-	logs.LogTrackingInfoData("GetItemByFieldCore expression.Value(fieldValueFilterByID)", expression.Value(fieldValueFilterByID), ctx, request) //TODO
-	filter := expression.Name(fieldNameFilterByID).Equal(
-		expression.Value(fieldValueFilterByID))
+
+	//filter := expression.Name(fieldNameFilterByID).Equal(
+	//	expression.Value(fieldValueFilterByID))
+
+	filter := expression.Name("publicID").Equal(
+		expression.Value("6900001"))
 
 	logs.LogTrackingInfoData("GetItemByFieldCore filter", filter, ctx, request) //TODO
 
