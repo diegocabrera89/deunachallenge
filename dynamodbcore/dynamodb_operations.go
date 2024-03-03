@@ -135,10 +135,8 @@ func (d DynamoDBRepository) GetItemByFieldCore(ctx context.Context, request even
 		IndexName:              aws.String(globalSecondaryIndex),
 		TableName:              aws.String(d.table),
 		KeyConditionExpression: aws.String(fieldNameFilterByID + " = :" + fieldNameFilterByID),
-		//KeyConditionExpression: aws.String(fieldNameFilterByID + " =:" + fieldNameFilterByID + " and " + fieldNameFilterStatus + " =:" + fieldNameFilterStatus),
 		ExpressionAttributeValues: map[string]types.AttributeValue{
 			":" + fieldNameFilterByID: &types.AttributeValueMemberS{Value: fieldValueFilterByID},
-			//fieldNameFilterStatus: &types.AttributeValueMemberS{Value: fieldValueFilterStatus},
 		},
 	}
 	logs.LogTrackingInfoData("GetItemByFieldCore input", input, ctx, request)
