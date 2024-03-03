@@ -131,19 +131,34 @@ func (d DynamoDBRepository) UpdateItemCore(ctx context.Context, request events.A
 func (d DynamoDBRepository) GetItemByFieldCore(ctx context.Context, request events.APIGatewayProxyRequest, fieldNameFilterByID string, fieldValueFilterByID string, globalSecondaryIndex string, fieldNameFilterStatus string, fieldValueFilterStatus string) (*dynamodb.QueryOutput, error) {
 	logs.LogTrackingInfo("GetItemByFieldCore", ctx, request)
 
+	//// Definir la expresión de la clave
+	//keyCondition := "#" + fieldNameFilterByID + " = :" + fieldValueFilterByID + " AND #" + fieldNameFilterStatus + " = :" + fieldValueFilterStatus
+	//
+	//// Definir los nombres de atributos de expresión
+	//exprAttrNames := map[string]string{
+	//	"#" + fieldNameFilterByID:   fieldNameFilterByID,
+	//	"#" + fieldNameFilterStatus: fieldNameFilterStatus,
+	//}
+	//
+	//// Definir los valores de atributos de expresión
+	//exprAttrValues := map[string]types.AttributeValue{
+	//	":" + fieldValueFilterByID:   &types.AttributeValueMemberS{Value: fieldValueFilterByID},
+	//	":" + fieldValueFilterStatus: &types.AttributeValueMemberS{Value: fieldValueFilterStatus},
+	//}
+
 	// Definir la expresión de la clave
-	keyCondition := "#" + fieldNameFilterByID + " = :" + fieldValueFilterByID + " AND #" + fieldNameFilterStatus + " = :" + fieldValueFilterStatus
+	keyCondition := "#publicID = :publicIDValue AND #statusMerchant = :statusMerchantValue"
 
 	// Definir los nombres de atributos de expresión
 	exprAttrNames := map[string]string{
-		"#" + fieldNameFilterByID:   fieldNameFilterByID,
-		"#" + fieldNameFilterStatus: fieldNameFilterStatus,
+		"#publicID":       "publicID",
+		"#statusMerchant": "statusMerchant",
 	}
 
 	// Definir los valores de atributos de expresión
 	exprAttrValues := map[string]types.AttributeValue{
-		":" + fieldValueFilterByID:   &types.AttributeValueMemberS{Value: fieldValueFilterByID},
-		":" + fieldValueFilterStatus: &types.AttributeValueMemberS{Value: fieldValueFilterStatus},
+		":publicIDValue":       &types.AttributeValueMemberS{Value: "6900001"},
+		":statusMerchantValue": &types.AttributeValueMemberS{Value: "Enable"},
 	}
 
 	input := &dynamodb.QueryInput{
