@@ -19,7 +19,7 @@ type CoreRepository interface {
 	GetItemCore(ctx context.Context, request events.APIGatewayProxyRequest, fieldNameFilterByID string, fieldValueFilterByID string) (*dynamodb.GetItemOutput, error)
 	DeleteItemCore(ctx context.Context, request events.APIGatewayProxyRequest, fieldNameFilterByID string, fieldValueFilterByID string) error
 	UpdateItemCore(ctx context.Context, request events.APIGatewayProxyRequest, itemObject interface{}, fieldNameFilterByID string, fieldValueFilterByID string, skipFields []string) error
-	GetItemByFieldCore(ctx context.Context, request events.APIGatewayProxyRequest, fieldNameFilterByID string, fieldValueFilterByID string, globalSecondaryIndex string) (*dynamodb.QueryOutput, error)
+	GetItemByFieldCore(ctx context.Context, request events.APIGatewayProxyRequest, fieldNameFilterByID string, fieldValueFilterByID string, globalSecondaryIndex string, fieldNameFilterStatus string, fieldValueFilterStatus string) (*dynamodb.QueryOutput, error)
 }
 
 // DynamoDBRepository implements DynamoDBRepository for DynamoDB.
@@ -128,15 +128,16 @@ func (d DynamoDBRepository) UpdateItemCore(ctx context.Context, request events.A
 }
 
 // GetItemByFieldCore get item from DynamoDB.
-func (d DynamoDBRepository) GetItemByFieldCore(ctx context.Context, request events.APIGatewayProxyRequest, fieldNameFilterByID string, fieldValueFilterByID string, globalSecondaryIndex string) (*dynamodb.QueryOutput, error) {
+func (d DynamoDBRepository) GetItemByFieldCore(ctx context.Context, request events.APIGatewayProxyRequest, fieldNameFilterByID string, fieldValueFilterByID string, globalSecondaryIndex string, fieldNameFilterStatus string, fieldValueFilterStatus string) (*dynamodb.QueryOutput, error) {
 	logs.LogTrackingInfo("GetItemByFieldCore", ctx, request)
 
 	input := &dynamodb.QueryInput{
 		IndexName:              aws.String(globalSecondaryIndex),
 		TableName:              aws.String(d.table),
-		KeyConditionExpression: aws.String(fieldNameFilterByID + " = :" + fieldNameFilterByID),
+		KeyConditionExpression: aws.String(fieldNameFilterByID + " = :" + fieldNameFilterByID + " and " + fieldNameFilterStatus + " = :" + fieldNameFilterStatus),
 		ExpressionAttributeValues: map[string]types.AttributeValue{
-			":" + fieldNameFilterByID: &types.AttributeValueMemberS{Value: fieldValueFilterByID},
+			":" + fieldNameFilterByID:   &types.AttributeValueMemberS{Value: fieldValueFilterByID},
+			":" + fieldNameFilterStatus: &types.AttributeValueMemberS{Value: fieldValueFilterStatus},
 		},
 	}
 	logs.LogTrackingInfoData("GetItemByFieldCore input", input, ctx, request)
