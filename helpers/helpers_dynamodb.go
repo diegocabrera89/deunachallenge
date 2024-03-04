@@ -5,7 +5,6 @@ import (
 	"github.com/aws/aws-lambda-go/events"
 	"github.com/aws/aws-sdk-go-v2/feature/dynamodb/attributevalue"
 	"github.com/aws/aws-sdk-go-v2/feature/dynamodb/expression"
-	"github.com/aws/aws-sdk-go-v2/service/dynamodb"
 	"github.com/aws/aws-sdk-go-v2/service/dynamodb/types"
 	"github.com/diegocabrera89/ms-payment-core/logs"
 )
@@ -26,12 +25,12 @@ func UnmarshalMapToType(inputMap map[string]types.AttributeValue, outputType int
 }
 
 // UnmarshalListOfMaps is a generic function that deserializes a map to a given type.
-func UnmarshalListOfMaps(responseValidateMerchant *dynamodb.QueryOutput, outputType interface{}) error {
+func UnmarshalListOfMaps(items []map[string]types.AttributeValue, outputType interface{}) error {
 	//Create a map slice to store the results of the query.
-	items := make([]map[string]types.AttributeValue, len(responseValidateMerchant.Items))
-	for i, item := range responseValidateMerchant.Items {
-		items[i] = item
-	}
+	//items := make([]map[string]types.AttributeValue, len(responseValidateMerchant.Items))
+	//for i, item := range responseValidateMerchant.Items {
+	//	items[i] = item
+	//}
 
 	return attributevalue.UnmarshalListOfMaps(items, outputType)
 }
