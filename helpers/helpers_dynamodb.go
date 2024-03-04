@@ -24,6 +24,11 @@ func UnmarshalMapToType(inputMap map[string]types.AttributeValue, outputType int
 	return attributevalue.UnmarshalMap(inputMap, outputType)
 }
 
+// UnmarshalListOfMaps is a generic function that deserializes a map to a given type.
+func UnmarshalListOfMaps(inputMap []map[string]types.AttributeValue, outputType []interface{}) error {
+	return attributevalue.UnmarshalListOfMaps(inputMap, outputType)
+}
+
 // GetPrimaryKey get primary key value from DynamoDB.
 func GetPrimaryKey(namePrimaryKey, valuePrimaryKey string) map[string]types.AttributeValue {
 	return map[string]types.AttributeValue{
