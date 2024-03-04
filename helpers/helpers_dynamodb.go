@@ -26,7 +26,7 @@ func UnmarshalMapToType(inputMap map[string]types.AttributeValue, outputType int
 }
 
 // UnmarshalListOfMaps is a generic function that deserializes a map to a given type.
-func UnmarshalListOfMaps(responseValidateMerchant *dynamodb.QueryOutput, outputType []interface{}) error {
+func UnmarshalListOfMaps(responseValidateMerchant *dynamodb.QueryOutput, outputType *[]interface{}) error {
 	//Create a map slice to store the results of the query.
 	items := make([]map[string]types.AttributeValue, len(responseValidateMerchant.Items))
 	for i, item := range responseValidateMerchant.Items {
