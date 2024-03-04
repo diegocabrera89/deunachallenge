@@ -151,7 +151,7 @@ func (d DynamoDBRepository) GetItemByFieldCore(ctx context.Context, request even
 	//}
 
 	// Definir la expresión de la clave
-	keyCondition := "#" + fieldNameFilterByID + " = :" + fieldNameFilterByID
+	keyCondition := "#" + fieldNameFilterByID + " = :" + fieldValueFilterByID
 	//keyCondition := "#publicID = :publicIDValue AND #statusMerchant = :statusMerchantValue"
 
 	// Definir los nombres de atributos de expresión
@@ -162,7 +162,7 @@ func (d DynamoDBRepository) GetItemByFieldCore(ctx context.Context, request even
 
 	// Definir los valores de atributos de expresión
 	exprAttrValues := map[string]types.AttributeValue{
-		":" + fieldValueFilterByID: &types.AttributeValueMemberS{Value: fieldValueFilterByID},
+		":" + fieldNameFilterByID: &types.AttributeValueMemberS{Value: fieldValueFilterByID},
 		//":statusMerchantValue": &types.AttributeValueMemberS{Value: "Enable"},
 	}
 
