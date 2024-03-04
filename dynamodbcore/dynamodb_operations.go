@@ -151,14 +151,14 @@ func (d DynamoDBRepository) GetItemByFieldCore(ctx context.Context, request even
 
 	// Definir los nombres de atributos de expresión
 	exprAttrNames := map[string]string{
-		"#publicID":       "publicID",
-		"#statusMerchant": "statusMerchant",
+		"#publicID": "publicID",
+		//"#statusMerchant": "statusMerchant",
 	}
 
 	// Definir los valores de atributos de expresión
 	exprAttrValues := map[string]types.AttributeValue{
-		":publicIDValue":       &types.AttributeValueMemberS{Value: "6900001"},
-		":statusMerchantValue": &types.AttributeValueMemberS{Value: "Enable"},
+		":publicIDValue": &types.AttributeValueMemberS{Value: "6900001"},
+		//":statusMerchantValue": &types.AttributeValueMemberS{Value: "Enable"},
 	}
 
 	input := &dynamodb.QueryInput{
