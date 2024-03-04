@@ -131,6 +131,10 @@ func (d DynamoDBRepository) UpdateItemCore(ctx context.Context, request events.A
 func (d DynamoDBRepository) GetItemByFieldCore(ctx context.Context, request events.APIGatewayProxyRequest, fieldNameFilterByID string, fieldValueFilterByID string, globalSecondaryIndex string, fieldNameFilterStatus string, fieldValueFilterStatus string) (*dynamodb.QueryOutput, error) {
 	logs.LogTrackingInfo("GetItemByFieldCore", ctx, request)
 
+	logs.LogTrackingInfoData("GetItemByFieldCore fieldNameFilterByID", fieldNameFilterByID, ctx, request)
+	logs.LogTrackingInfoData("GetItemByFieldCore fieldValueFilterByID", fieldValueFilterByID, ctx, request)
+	logs.LogTrackingInfoData("GetItemByFieldCore globalSecondaryIndex", globalSecondaryIndex, ctx, request)
+
 	//// Definir la expresión de la clave
 	//keyCondition := "#" + fieldNameFilterByID + " = :" + fieldValueFilterByID + " AND #" + fieldNameFilterStatus + " = :" + fieldValueFilterStatus
 	//
