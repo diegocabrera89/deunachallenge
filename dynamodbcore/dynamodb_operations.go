@@ -147,7 +147,8 @@ func (d DynamoDBRepository) GetItemByFieldCore(ctx context.Context, request even
 	//}
 
 	// Definir la expresión de la clave
-	keyCondition := "#publicID = :publicIDValue AND #statusMerchant = :statusMerchantValue"
+	keyCondition := "#publicID = :publicIDValue"
+	//keyCondition := "#publicID = :publicIDValue AND #statusMerchant = :statusMerchantValue"
 
 	// Definir los nombres de atributos de expresión
 	exprAttrNames := map[string]string{
