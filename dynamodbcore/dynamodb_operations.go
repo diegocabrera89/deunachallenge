@@ -131,28 +131,6 @@ func (d DynamoDBRepository) UpdateItemCore(ctx context.Context, request events.A
 func (d DynamoDBRepository) GetItemByFieldCore(ctx context.Context, request events.APIGatewayProxyRequest, fieldNameFilterByID string, fieldValueFilterByID string, globalSecondaryIndex string, fieldNameFilterStatus string, fieldValueFilterStatus string) (*dynamodb.QueryOutput, error) {
 	logs.LogTrackingInfo("GetItemByFieldCore", ctx, request)
 
-	logs.LogTrackingInfoData("GetItemByFieldCore fieldNameFilterByID", fieldNameFilterByID, ctx, request)
-	logs.LogTrackingInfoData("GetItemByFieldCore fieldValueFilterByID", fieldValueFilterByID, ctx, request)
-	logs.LogTrackingInfoData("GetItemByFieldCore globalSecondaryIndex", globalSecondaryIndex, ctx, request)
-
-	//// Definir la expresión de la clave
-	//keyCondition := "#" + fieldNameFilterByID + " = :" + fieldValueFilterByID + " AND #" + fieldNameFilterStatus + " = :" + fieldValueFilterStatus
-	//
-	//// Definir los nombres de atributos de expresión
-	//exprAttrNames := map[string]string{
-	//	"#" + fieldNameFilterByID:   fieldNameFilterByID,
-	//	"#" + fieldNameFilterStatus: fieldNameFilterStatus,
-	//}
-	//
-	//// Definir los valores de atributos de expresión
-	//exprAttrValues := map[string]types.AttributeValue{
-	//	":" + fieldValueFilterByID:   &types.AttributeValueMemberS{Value: fieldValueFilterByID},
-	//	":" + fieldValueFilterStatus: &types.AttributeValueMemberS{Value: fieldValueFilterStatus},
-	//}
-
-	// Definir la expresión de la clave
-	//keyCondition := "#" + fieldNameFilterByID + " = :" + fieldNameFilterByID + "Value AND " +
-	//	"#" + fieldNameFilterStatus + " = :" + fieldNameFilterStatus + "Value"
 	keyCondition := "#" + fieldNameFilterByID + " = :" + fieldNameFilterByID + "Value"
 	//keyCondition := "#publicID = :publicIDValue AND #statusMerchant = :statusMerchantValue"
 
@@ -160,14 +138,12 @@ func (d DynamoDBRepository) GetItemByFieldCore(ctx context.Context, request even
 	exprAttrNames := map[string]string{
 		"#" + fieldNameFilterByID: fieldNameFilterByID,
 		//"#" + fieldNameFilterStatus: fieldNameFilterStatus,
-		//"#statusMerchant": "statusMerchant",
 	}
 
 	// Definir los valores de atributos de expresión
 	exprAttrValues := map[string]types.AttributeValue{
 		":" + fieldNameFilterByID + "Value": &types.AttributeValueMemberS{Value: fieldValueFilterByID},
 		//":" + fieldNameFilterStatus + "Value": &types.AttributeValueMemberS{Value: fieldValueFilterStatus},
-		//":statusMerchantValue": &types.AttributeValueMemberS{Value: "Enable"},
 	}
 
 	input := &dynamodb.QueryInput{

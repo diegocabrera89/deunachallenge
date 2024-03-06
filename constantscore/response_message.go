@@ -13,11 +13,14 @@ const (
 	// ErrorCreatingItem error creating item.
 	ErrorCreatingItem = "Error creating item"
 
-	// ErrorDeletingItem error creating item.
+	// ErrorDeletingItem error deleting item.
 	ErrorDeletingItem = "Error deleting element"
 
-	// ErrorUpdatingItem error creating item.
+	// ErrorUpdatingItem error updating item.
 	ErrorUpdatingItem = "Error updating element"
+
+	// ErrorGettingElement error getting item.
+	ErrorGettingElement = "Error getting element"
 
 	// ItemCreatedSuccessfully message for successful creation.
 	ItemCreatedSuccessfully = "Item created successfully"
