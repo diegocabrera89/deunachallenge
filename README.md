@@ -1,6 +1,6 @@
 # ms-payment-core
 
-Microservice code in GO. This microservice manages processor transactions
+Microservice code in GO. This microservice manages core transactions
 
 ## Pre-steps
 If this is your first time using go and GoLand as an IDE you should check the following tutorial:
